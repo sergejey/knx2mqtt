@@ -30,18 +30,13 @@ public class GroupAddressManager
 	{
 		GroupAddressInfo gai = gaByName.get(name);
 		if (gai==null) {
-         L.severe("Dynamic node added: " + name);
-		 gai = new GroupAddressInfo(name, name);
-         try
-			{
-		     gai.dpt='Unknown';
-		     gai.createTranslator();
-			}
-			catch(KNXException e)
-			{
-
-			}
- 		 gaByName.put(name, gai);
+		         String newName;
+		         String newDpt;
+		         newName=name;
+		         newDpt="DPST-1-1"; // bit
+		         L.severe("Dynamic node added: Name = " + newName + " Address = " + name + " DPT = " + newDpt);
+        		 storeGAInfo(name, newName, newDpt);
+        		 gai = gaByName.get(name);
 		}
 		return gai;
 	}
