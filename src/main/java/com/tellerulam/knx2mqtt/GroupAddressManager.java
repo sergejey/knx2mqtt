@@ -30,12 +30,12 @@ public class GroupAddressManager
 	{
 		GroupAddressInfo gai = gaByName.get(name);
 		if (gai==null) {
-		         String newName;
+		         String newAddress;
 		         String newDpt;
-		         newName=name;
+		         newAddress=name;
 		         newDpt="DPST-1-1"; // bit
-		         L.severe("Dynamic node added: Name = " + newName + " Address = " + name + " DPT = " + newDpt);
-        		 storeGAInfo(name, newName, newDpt);
+		         L.severe("Dynamic node added: Name = " + name + " Address = " + newAddress + " DPT = " + newDpt);
+        		 storeGAInfo(newAddress, name, newDpt);
         		 gai = gaByName.get(name);
 		}
 		return gai;
