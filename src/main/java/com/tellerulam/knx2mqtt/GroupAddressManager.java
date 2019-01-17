@@ -28,7 +28,22 @@ public class GroupAddressManager
 
 	public static GroupAddressInfo getGAInfoForName(String name)
 	{
-		return gaByName.get(name);
+		GroupAddressInfo gai = gaByName.get(name);
+		if (gai==null) {
+         L.severe("Dynamic node added: " + name);
+		 gai = new GroupAddressInfo(name, name);
+         try
+			{
+		     gai.dpt='Unknown';
+		     gai.createTranslator();
+			}
+			catch(KNXException e)
+			{
+
+			}
+ 		 gaByName.put(name, gai);
+		}
+		return gai;
 	}
 
 	public static class GroupAddressInfo implements Serializable
