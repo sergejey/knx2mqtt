@@ -32,10 +32,11 @@ public class GroupAddressManager
 		if (gai==null) {
 		         String newAddress;
 		         String newDpt;
-		         newAddress=name;
+		         newAddress = name;
+		         GroupAddress ga=new GroupAddress(newAddress);
 		         newDpt="DPST-1-1"; // bit
 		         L.severe("Dynamic node added: Name = " + name + " Address = " + newAddress + " DPT = " + newDpt);
-        		 storeGAInfo(newAddress, name, newDpt);
+        		 storeGAInfo(ga.toString(), name, newDpt);
         		 gai = gaByName.get(name);
 		}
 		return gai;
