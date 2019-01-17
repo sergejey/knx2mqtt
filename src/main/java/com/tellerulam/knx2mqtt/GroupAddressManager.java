@@ -29,15 +29,39 @@ public class GroupAddressManager
 	public static GroupAddressInfo getGAInfoForName(String name)
 	{
 		GroupAddressInfo gai = gaByName.get(name);
-		if (gai==null) {
-		         String newAddress;
+		if (gai==null && (Pattern.matches("^\\d+/\\d+/\\d+$",name) || Pattern.matches("^\\d+/\\d+/\\d+/\\w+$",name))) {
+			try {
+		         String newAddress=name;
 		         String newDpt;
-		         newAddress = name;
+		         String dataType="";
+		         if (Pattern.matches("^\\d+/\\d+/\\d+$",name)) {
+                    newAddress = name;
+		         } else {
+		            Pattern p = Pattern.compile("^(\\d+/\\d+/\\d+)/(\\w+)$");
+                  	Matcher m = p.matcher(name);
+                  	if (m.find()) {
+                  	 newAddress=m.group(1);
+                  	 dataType=m.group(2);
+                  	}
+		         }
 		         GroupAddress ga=new GroupAddress(newAddress);
-		         newDpt="DPST-1-1"; // bit
+			 int rawAddress=ga.getRawAddress();
+			 String rawAddressString=Integer.toString(rawAddress);
+ 		         newDpt="DPST-1-1"; // bit
+			     if (dataType.equals("byte")) {
+                    newDpt="DPST-5-1"; // byte
+			     }
+                 if (dataType.equals("word")) {
+                    newDpt="DPST-9-1"; // word
+			     }
 		         L.severe("Dynamic node added: Name = " + name + " Address = " + newAddress + " DPT = " + newDpt);
-        		 storeGAInfo(ga.toString(), name, newDpt);
+        		 storeGAInfo(rawAddressString, name, newDpt);
         		 gai = gaByName.get(name);
+			 gai.createTranslator();
+			}
+			catch(Exception e) {
+			L.log(Level.WARNING,"Error when making dynamic element "+name,e);
+			}
 		}
 		return gai;
 	}
