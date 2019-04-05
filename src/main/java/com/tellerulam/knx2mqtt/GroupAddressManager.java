@@ -54,9 +54,13 @@ public class GroupAddressManager
                  if (dataType.equals("word")) {
                     newDpt="DPST-9-1"; // word
 			     }
-		         L.severe("Dynamic node added: Name = " + name + " Address = " + newAddress + " DPT = " + newDpt);
+				 L.severe("Adding: Name = " + name + " Address = " + newAddress + " DPT = " + newDpt);
         		 storeGAInfo(rawAddressString, name, newDpt);
         		 gai = gaByName.get(name);
+				if (gai == null) {
+					L.severe("ELEMENT IS NOT ADDED: Name = " + name + " Address = " + newAddress + " DPT = " + newDpt);
+					return null;
+				}
 			 gai.createTranslator();
 			}
 			catch(Exception e) {
@@ -304,15 +308,7 @@ public class GroupAddressManager
 
 	private static void storeGAInfo(String address, String name, String datapointType)
 	{
-		String ga = new GroupAddress(Integer.parseInt(address)).toString();
 
-		GroupAddressInfo gai = gaTable.get(ga);
-		if(gai == null)
-		{
-			gai = new GroupAddressInfo(name, ga);
-			gaTable.put(ga, gai);
-			gaByName.put(name, gai);
-		}
 		Pattern p = Pattern.compile("DPS?T-([0-9]+)(-([0-9]+))?");
 		Matcher m = p.matcher(datapointType);
 		if(!m.find())
@@ -332,7 +328,23 @@ public class GroupAddressManager
 				dptBuilder.append('0');
 			dptBuilder.append(suffix);
 		}
-		gai.dpt = dptBuilder.toString();
+
+		String ga = new GroupAddress(Integer.parseInt(address)).toString();
+		L.severe("Storing " + name + " Address = " + address + " DPT = " + datapointType);
+		GroupAddressInfo gai = gaTable.get(ga);
+		if(gai == null)
+		{
+			L.severe("Not found adding");
+			gai = new GroupAddressInfo(name, ga);
+			gai.dpt = dptBuilder.toString();
+			gaTable.put(ga, gai);
+			gaByName.put(name, gai);
+			System.out.println(gaByName);
+		} else {
+			gai.dpt = dptBuilder.toString();
+			L.severe("Found!");
+		}
+
 	}
 
 	/*

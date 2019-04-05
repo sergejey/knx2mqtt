@@ -244,7 +244,7 @@ public class KNXConnector extends Thread implements NetworkLinkListener
 		try
 		{
 			GroupAddress ga=new GroupAddress(gaspec);
-
+			conn.L.log(Level.INFO,"Writing " + val + " to " + gaspec);
 			// We do special handling for booleans
 			if(gai.xlator instanceof DPTXlatorBoolean)
 			{
